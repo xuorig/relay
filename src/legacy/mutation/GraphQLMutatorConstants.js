@@ -16,6 +16,8 @@ var GraphQLMutatorConstants = {
   APPEND: 'append',
   PREPEND: 'prepend',
   REMOVE: 'remove',
+  IGNORE: 'ignore',
+  REFETCH: 'refetch',
 
   NODE_DELETE_HANDLER: 'node_delete',
   RANGE_ADD_HANDLER: 'range_add',
@@ -52,5 +54,9 @@ GraphQLMutatorConstants.RANGE_OPERATIONS
   [GraphQLMutatorConstants.PREPEND] = true;
 GraphQLMutatorConstants.RANGE_OPERATIONS
   [GraphQLMutatorConstants.REMOVE] = true;
+GraphQLMutatorConstants.RANGE_OPERATIONS
+  [GraphQLMutatorConstants.IGNORE] = true;
+GraphQLMutatorConstants.RANGE_OPERATIONS
+  [GraphQLMutatorConstants.REFETCH] = true;
 
 module.exports = GraphQLMutatorConstants;

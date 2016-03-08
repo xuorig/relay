@@ -13,6 +13,7 @@
 
 'use strict';
 
+const GraphQLMutatorConstants = require('./GraphQLMutatorConstants');
 import type {ConcreteMutation} from 'ConcreteQuery';
 const RelayConnectionInterface = require('RelayConnectionInterface');
 import type {DataID, RangeBehaviors} from 'RelayInternalTypes';
@@ -30,6 +31,8 @@ const nullthrows = require('nullthrows');
 const inferRelayFieldsFromData = require('inferRelayFieldsFromData');
 const intersectRelayQuery = require('intersectRelayQuery');
 const invariant = require('invariant');
+
+const REFETCH = GraphQLMutatorConstants.REFETCH;
 
 // This should probably use disjoint unions.
 type MutationConfig = {[key: string]: $FlowFixMe};
@@ -209,14 +212,18 @@ var RelayMutationQuery = {
         if (!trackedEdges.length) {
           return;
         }
-        if (trackedConnection.getRangeBehaviorKey() in rangeBehaviors) {
+
+        const rangeBehaviorKey = trackedConnection.getRangeBehaviorKey();
+        const rangeBehaviorForConnection = rangeBehaviors[rangeBehaviorKey];
+        if (rangeBehaviorForConnection && rangeBehaviorForConnection !== REFETCH) {
           // Include edges from all connections that exist in `rangeBehaviors`.
           // This may add duplicates, but they will eventually be flattened.
           trackedEdges.forEach(trackedEdge => {
             mutatedEdgeFields.push(...trackedEdge.getChildren());
           });
         } else {
-          // If the connection is not in `rangeBehaviors`, re-fetch it.
+          // If the connection is not in `rangeBehaviors`, or the rangeBehavior was set
+          // to REFETCH, re-fetch it.
           keysWithoutRangeBehavior[trackedConnection.getShallowHash()] = true;
         }
       });

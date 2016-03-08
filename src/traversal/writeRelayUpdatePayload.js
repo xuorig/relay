@@ -50,7 +50,7 @@ type PayloadObject = {[key: string]: Payload};
 
 const {CLIENT_MUTATION_ID, EDGES} = RelayConnectionInterface;
 const {ANY_TYPE, ID, ID_TYPE, NODE, NODE_TYPE} = RelayNodeInterface;
-const {APPEND, PREPEND, REMOVE} = GraphQLMutatorConstants;
+const {APPEND, PREPEND, REMOVE, IGNORE} = GraphQLMutatorConstants;
 
 const EDGES_FIELD = RelayQuery.Field.build({
   fieldName: EDGES,
@@ -419,8 +419,7 @@ function addRangeNode(
     getRangeBehavior(config.rangeBehaviors, filterCalls) :
     null;
 
-  // no range behavior specified for this combination of filter calls
-  if (!rangeBehavior) {
+  if (!rangeBehavior || rangeBehavior === IGNORE) {
     return;
   }
 
